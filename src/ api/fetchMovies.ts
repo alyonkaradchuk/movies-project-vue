@@ -16,7 +16,7 @@ export const fetchTrendingMovies = async () => {
   }
 }
 
-export const searchMovies = async (query) => {
+export const searchMovies = async (query: string) => {
   if (query.trim() === '') return
   try {
     const apiKey = '6d96d2ed9f31d2b9bf159f2900f7bd76'
@@ -31,6 +31,6 @@ export const searchMovies = async (query) => {
   }
 }
 
-export const getPoster = (path) => {
+export const getPoster = (path: string) => {
   return path ? `https://image.tmdb.org/t/p/w500${path}` : 'https://via.placeholder.com/500'
 }
