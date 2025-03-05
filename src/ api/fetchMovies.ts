@@ -32,5 +32,5 @@ export const searchMovies = async (query: string) => {
 }
 
 export const getPoster = (path: string) => {
-  return path ? `https://image.tmdb.org/t/p/w500${path}` : 'https://via.placeholder.com/500'
+  return path ? `https://image.tmdb.org/t/p/w500${path}` : 'https://picsum.photos/500'
 }

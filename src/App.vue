@@ -8,7 +8,7 @@
           :id="movie.id"
           :image="{ imageUrl: getPoster(movie.poster_path) }"
           :title="movie.title || movie.name"
-          :genre="movie.genre"
+          :genre="getGenres(movie.genre_ids) || 'Unknown'"
           :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
         />
       </div>
@@ -33,6 +33,31 @@ export default {
   },
   setup() {
     const data = ref([])
+    const genres = ref({})
+
+    const fetchGenres = async () => {
+      try {
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDk2ZDJlZDlmMzFkMmI5YmYxNTlmMjkwMGY3YmQ3NiIsIm5iZiI6MTc0MTExNjIyOC44MDQ5OTk4LCJzdWIiOiI2N2M3NTM0NDY4ZTUyNjdmNDdmMDc2NmMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.bO9kt5-k8aSXAFPIK5OOzd_0f_egRw5H9kOw9GUG2Fg'
+          }
+        }
+        const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+        const result = await response.json()
+        genres.value = result.genres.reduce((acc, genre) => {
+          acc[genre.id] = genre.name
+          return acc
+        }, {})
+      } catch (error) {
+        console.error('Error fetching genres:', error)
+      }
+    }
+
+    const getGenres = (genreIds) => {
+      return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ')
+    }
 
     const onSearch = async (query) => {
       if (query.trim()) {
@@ -45,6 +70,7 @@ export default {
     }
 
     onMounted(async () => {
+      await fetchGenres()
       const result = await fetchTrendingMovies()
       data.value = result.results
     })
@@ -53,6 +79,7 @@ export default {
       data,
       onSearch,
       getPoster,
+      getGenres,
     }
   },
 }
