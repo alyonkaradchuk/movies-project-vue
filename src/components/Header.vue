@@ -1,7 +1,8 @@
 <template>
   <header class="header">
     <div class="search-container">
-      <input type="text" v-model="query" placeholder="Movie Search" @keyup.enter="onSearch" />
+      <input type="text" v-model="query" placeholder="Movie Search" @keyup.enter="onSearch" class="search-input"/>
+      <button @click="onSearch" class="search-button">Search</button>
     </div>
     <nav class="nav">
       <ul>
@@ -13,19 +14,23 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
   name: 'HeaderComponent',
-  data() {
+  setup(props, { emit }) {
+    const query = ref('');
+
+    const onSearch = () => {
+      emit('search', query.value);
+    };
+
     return {
-      query: '',
-    }
-  },
-  methods: {
-    onSearch() {
-      this.$emit('search', this.query)
-    },
-  },
-}
+      query,
+      onSearch
+    };
+  }
+};
 </script>
 
 <style scoped>
@@ -44,6 +49,34 @@ export default {
 
 .search-container {
   position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 10px 20px;
+  width: 250px;
+  border: none;
+  outline: none;
+  transition: box-shadow 0.3s;
+}
+
+.search-input:focus {
+  box-shadow: inset 0 0 10px rgba(255, 99, 71, 0.5);
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #e5533d;
 }
 
 .nav ul {

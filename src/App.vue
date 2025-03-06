@@ -41,10 +41,14 @@ export default {
           method: 'GET',
           headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDk2ZDJlZDlmMzFkMmI5YmYxNTlmMjkwMGY3YmQ3NiIsIm5iZiI6MTc0MTExNjIyOC44MDQ5OTk4LCJzdWIiOiI2N2M3NTM0NDY4ZTUyNjdmNDdmMDc2NmMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.bO9kt5-k8aSXAFPIK5OOzd_0f_egRw5H9kOw9GUG2Fg'
-          }
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDk2ZDJlZDlmMzFkMmI5YmYxNTlmMjkwMGY3YmQ3NiIsIm5iZiI6MTc0MTExNjIyOC44MDQ5OTk4LCJzdWIiOiI2N2M3NTM0NDY4ZTUyNjdmNDdmMDc2NmMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.bO9kt5-k8aSXAFPIK5OOzd_0f_egRw5H9kOw9GUG2Fg',
+          },
         }
-        const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+        const response = await fetch(
+          'https://api.themoviedb.org/3/genre/movie/list?language=en',
+          options,
+        )
         const result = await response.json()
         genres.value = result.genres.reduce((acc, genre) => {
           acc[genre.id] = genre.name
