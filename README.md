@@ -1,39 +1,11 @@
-# movies-project-vue
+# Movie Search Project
+Movie Search Project is a web application for searching movies, viewing brief information, and managing your personal movie lists. You can add movies to your Watched list or Queue for future viewing.
 
-This template should help get you started developing with Vue 3 in Vite.
+Click [here](https://alyonkaradchuk.github.io/movies-project-vue/) to see the demonstration.
 
-## Recommended IDE Setup
+# Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Search for movies using an external API
+- View short movie overviews with key details
+- Add movies to the Watched list
+- Add movies to the Queue list

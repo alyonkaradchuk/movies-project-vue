@@ -8,7 +8,7 @@
           :id="movie.id"
           :image="{ imageUrl: getPoster(movie.poster_path) }"
           :title="movie.title || movie.name"
-          :genre="getGenres(movie.genre_ids) || 'Unknown'"
+          :genre="getGenres(movie.genre_ids)"
           :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
         />
       </div>
@@ -62,7 +62,7 @@ export default {
     }
 
     const getGenres = (genreIds) => {
-      return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ')
+      return genreIds.map((id) => genres.value[id] || 'Other').join(', ')
     }
 
     const onSearch = async (query) => {
