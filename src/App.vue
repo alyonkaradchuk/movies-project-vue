@@ -12,6 +12,7 @@
           :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
         />
       </div>
+      <AppFooter />
     </div>
 
     <div v-else>
@@ -25,11 +26,13 @@ import { ref, onMounted } from 'vue'
 import HeaderComponent from './components/Header.vue'
 import Cards from './components/Cards.vue'
 import { fetchTrendingMovies, searchMovies, getPoster } from './ api/fetchMovies'
+import AppFooter from './components/Footer.vue'
 
 export default {
   components: {
     HeaderComponent,
     Cards,
+    AppFooter,
   },
   setup() {
     const data = ref([])
