@@ -44,7 +44,6 @@ export default {
   margin: 0;
   padding: 0;
   color: #525252;
-  border-radius: 15px;
   transition: transform 0.3s ease-in-out;
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
@@ -59,7 +58,6 @@ export default {
 .card-movie__image {
   width: 100%;
   height: 450px;
-  border-radius: 15px 15px 0 0;
   object-fit: cover;
 }
 

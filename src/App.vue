@@ -2,8 +2,12 @@
   <div class="app">
     <HeaderComponent @search="onSearch" />
 
-    <div v-if="data.length" class="movies-container">
-      <div class="movie" v-for="movie in data" :key="movie.id">
+    <div v-if="isLoading">
+      <p>Loading...</p>
+    </div>
+
+    <div v-if="paginatedMovies.length" class="movies-container">
+      <div class="movie" v-for="movie in paginatedMovies" :key="movie.id">
         <Cards
           :id="movie.id"
           :image="{ imageUrl: getPoster(movie.poster_path) }"
@@ -12,31 +16,59 @@
           :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
         />
       </div>
-      <AppFooter />
+
+      <Pagination
+        v-if="data.length > moviesPerPage"
+        :totalMovies="data.length"
+        :moviesPerPage="moviesPerPage"
+        :currentPage="currentPage"
+        @page-change="handlePageChange"
+      />
     </div>
 
     <div v-else>
-      <p>No movies found.</p>
-    </div>
+        <p>No movies found.</p>
+     </div>
+     
+    <AppFooter />
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import HeaderComponent from './components/Header.vue'
 import Cards from './components/Cards.vue'
 import { fetchTrendingMovies, searchMovies, getPoster } from './ api/fetchMovies'
 import AppFooter from './components/Footer.vue'
+import Pagination from './components/Pagination.vue'
 
 export default {
   components: {
     HeaderComponent,
     Cards,
     AppFooter,
+    Pagination,
   },
   setup() {
     const data = ref([])
     const genres = ref({})
+    const currentPage = ref(1)
+    const moviesPerPage = 8
+    const isLoading = ref(true)
+
+    watch(data, () => {
+      currentPage.value = 1
+    })
+
+    const paginatedMovies = computed(() => {
+      const start = (currentPage.value - 1) * moviesPerPage
+      const end = start + moviesPerPage
+      return data.value.slice(start, end)
+    })
+
+    const handlePageChange = (page) => {
+      currentPage.value = page
+    }
 
     const fetchGenres = async () => {
       try {
@@ -47,10 +79,7 @@ export default {
             Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
           },
         }
-        const response = await fetch(
-          'https://api.themoviedb.org/3/genre/movie/list?language=en',
-          options,
-        )
+        const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
         const result = await response.json()
         genres.value = result.genres.reduce((acc, genre) => {
           acc[genre.id] = genre.name
@@ -66,19 +95,21 @@ export default {
     }
 
     const onSearch = async (query) => {
+      currentPage.value = 1
       if (query.trim()) {
         const result = await searchMovies(query)
-        data.value = result.results
+        data.value = result.results || []
       } else {
         const result = await fetchTrendingMovies()
-        data.value = result.results
+        data.value = result.results || []
       }
     }
 
     onMounted(async () => {
       await fetchGenres()
       const result = await fetchTrendingMovies()
-      data.value = result.results
+      data.value = result.results || []
+      isLoading.value = false
     })
 
     return {
@@ -86,6 +117,11 @@ export default {
       onSearch,
       getPoster,
       getGenres,
+      paginatedMovies,
+      handlePageChange,
+      moviesPerPage,
+      currentPage,
+      isLoading,
     }
   },
 }
@@ -94,6 +130,9 @@ export default {
 <style scoped>
 .app {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .movie {
@@ -110,6 +149,7 @@ export default {
 .movies-container {
   display: flex;
   flex-wrap: wrap;
+  flex: 1;
   justify-content: center;
   gap: 20px;
 }

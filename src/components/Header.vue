@@ -59,6 +59,7 @@ export default {
   border: none;
   outline: none;
   transition: box-shadow 0.3s;
+  border-radius: 5px;
 }
 
 .search-input:focus {
@@ -73,6 +74,7 @@ export default {
   outline: none;
   cursor: pointer;
   transition: background-color 0.3s;
+  border-radius: 5px
 }
 
 .search-button:hover {

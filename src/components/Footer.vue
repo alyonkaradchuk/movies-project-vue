@@ -31,6 +31,7 @@ export default {
   padding: 20px 0;
   width: 100%;
   position: relative;
+  margin-top: auto;
 }
 
 .footer-content {
