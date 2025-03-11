@@ -1,36 +1,42 @@
 <template>
   <header class="header">
     <div class="search-container">
-      <input type="text" v-model="query" placeholder="Movie Search" @keyup.enter="onSearch" class="search-input"/>
+      <input
+        type="text"
+        v-model="query"
+        placeholder="Movie Search"
+        @keyup.enter="onSearch"
+        class="search-input"
+      />
       <button @click="onSearch" class="search-button">Search</button>
     </div>
     <nav class="nav">
       <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/my-library">My Library</a></li>
+        <router-link to="/">Home</router-link>
+        <router-link to="/library">My Library</router-link>
       </ul>
     </nav>
   </header>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 export default {
   name: 'HeaderComponent',
   setup(props, { emit }) {
-    const query = ref('');
+    const query = ref('')
 
     const onSearch = () => {
-      emit('search', query.value);
-    };
+      emit('search', query.value)
+    }
 
     return {
       query,
-      onSearch
-    };
-  }
-};
+      onSearch,
+    }
+  },
+}
 </script>
 
 <style scoped>
@@ -74,7 +80,7 @@ export default {
   outline: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  border-radius: 5px
+  border-radius: 5px;
 }
 
 .search-button:hover {

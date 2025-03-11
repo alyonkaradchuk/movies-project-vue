@@ -1,5 +1,5 @@
-<!-- <template>
-  <div class="app">
+<template>
+  <div class="home">
     <HeaderComponent @search="onSearch" />
 
     <div v-if="isLoading">
@@ -30,27 +30,27 @@
         <p>No movies found.</p>
      </div>
 
-    <AppFooter />
     <Modal :show="isModalOpen" :movie="selectedMovie" @close="closeModal" />
+    <AppFooter />
   </div>
 </template>
 
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
-import HeaderComponent from './components/Header.vue'
-import Cards from './components/Cards.vue'
-import { fetchTrendingMovies, searchMovies, getPoster, fetchGenres } from './ api/fetchMovies'
-import AppFooter from './components/Footer.vue'
-import Pagination from './components/Pagination.vue'
-import Modal from './components/Modal.vue'
+import HeaderComponent from '../components/Header.vue'
+import Cards from '../components/Cards.vue'
+import { fetchTrendingMovies, searchMovies, getPoster, fetchGenres } from '../ api/fetchMovies'
+import Pagination from '../components/Pagination.vue'
+import Modal from '../components/Modal.vue'
+import AppFooter from '../components/Footer.vue'
 
 export default {
   components: {
     HeaderComponent,
     Cards,
-    AppFooter,
     Pagination,
     Modal,
+    AppFooter,
   },
   setup() {
     const data = ref([])
@@ -127,22 +127,10 @@ export default {
     }
   },
 }
-</script> -->
-
-<template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'App',
-}
 </script>
 
 <style scoped>
-.app {
+.home {
   text-align: center;
   display: flex;
   flex-direction: column;
