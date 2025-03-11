@@ -7,7 +7,7 @@
     </div>
 
     <div v-if="paginatedMovies.length" class="movies-container">
-      <div class="movie" v-for="movie in paginatedMovies" :key="movie.id">
+      <div class="movie" v-for="movie in paginatedMovies" :key="movie.id" @click="openModal(movie)">
         <Cards
           :id="movie.id"
           :image="{ imageUrl: getPoster(movie.poster_path) }"
@@ -29,8 +29,9 @@
     <div v-else>
         <p>No movies found.</p>
      </div>
-     
+
     <AppFooter />
+    <Modal :show="isModalOpen" :movie="selectedMovie" @close="closeModal" />
   </div>
 </template>
 
@@ -38,9 +39,10 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import HeaderComponent from './components/Header.vue'
 import Cards from './components/Cards.vue'
-import { fetchTrendingMovies, searchMovies, getPoster } from './ api/fetchMovies'
+import { fetchTrendingMovies, searchMovies, getPoster, fetchGenres } from './ api/fetchMovies'
 import AppFooter from './components/Footer.vue'
 import Pagination from './components/Pagination.vue'
+import Modal from './components/Modal.vue'
 
 export default {
   components: {
@@ -48,6 +50,7 @@ export default {
     Cards,
     AppFooter,
     Pagination,
+    Modal,
   },
   setup() {
     const data = ref([])
@@ -55,6 +58,9 @@ export default {
     const currentPage = ref(1)
     const moviesPerPage = 8
     const isLoading = ref(true)
+
+    const isModalOpen = ref(false);
+    const selectedMovie = ref(null);
 
     watch(data, () => {
       currentPage.value = 1
@@ -68,26 +74,6 @@ export default {
 
     const handlePageChange = (page) => {
       currentPage.value = page
-    }
-
-    const fetchGenres = async () => {
-      try {
-        const options = {
-          method: 'GET',
-          headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
-          },
-        }
-        const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
-        const result = await response.json()
-        genres.value = result.genres.reduce((acc, genre) => {
-          acc[genre.id] = genre.name
-          return acc
-        }, {})
-      } catch (error) {
-        console.error('Error fetching genres:', error)
-      }
     }
 
     const getGenres = (genreIds) => {
@@ -105,8 +91,20 @@ export default {
       }
     }
 
+    const openModal = (movie) => {
+      selectedMovie.value = movie;
+      isModalOpen.value = true;
+    };
+
+    const closeModal = () => {
+      isModalOpen.value = false;
+      selectedMovie.value = null;
+    };
+
+
     onMounted(async () => {
-      await fetchGenres()
+      const genresData = await fetchGenres();
+      genres.value = genresData;
       const result = await fetchTrendingMovies()
       data.value = result.results || []
       isLoading.value = false
@@ -122,6 +120,10 @@ export default {
       moviesPerPage,
       currentPage,
       isLoading,
+      isModalOpen,
+      selectedMovie,
+      openModal,
+      closeModal,
     }
   },
 }

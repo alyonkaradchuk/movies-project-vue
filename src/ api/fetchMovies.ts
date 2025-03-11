@@ -33,3 +33,24 @@ export const searchMovies = async (query: string) => {
 export const getPoster = (path: string) => {
   return path ? `https://image.tmdb.org/t/p/w500${path}` : 'https://picsum.photos/500'
 }
+
+export const fetchGenres = async () => {
+  try {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
+      },
+    }
+    const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+    const result = await response.json()
+
+    return result.genres.reduce((acc, genre) => {
+      acc[genre.id] = genre.name
+      return acc
+    }, {})
+  } catch (error) {
+    console.error('Error fetching genres:', error)
+  }
+}
