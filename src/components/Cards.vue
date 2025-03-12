@@ -41,8 +41,6 @@ export default {
   flex-direction: column;
   width: 300px;
   min-height: 600px;
-  margin: 0;
-  padding: 0;
   color: #525252;
   transition: transform 0.3s ease-in-out;
   background-color: #fff;

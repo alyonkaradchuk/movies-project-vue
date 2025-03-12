@@ -1,6 +1,11 @@
 <template>
   <header class="header">
-    <div class="search-container">
+    <div v-if="isLibraryPage" class="buttons-container">
+      <button class="header-button" @click="$emit('filter', 'watched')">Watched</button>
+      <button class="header-button" @click="$emit('filter', 'queue')">Queue</button>
+    </div>
+
+    <div v-else class="search-container">
       <input
         type="text"
         v-model="query"
@@ -10,6 +15,7 @@
       />
       <button @click="onSearch" class="search-button">Search</button>
     </div>
+
     <nav class="nav">
       <ul>
         <router-link to="/">Home</router-link>
@@ -20,20 +26,34 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default {
-  name: 'HeaderComponent',
   setup(props, { emit }) {
+    const route = useRoute()
     const query = ref('')
+
+    const isLibraryPage = computed(() => route.name === 'Library')
 
     const onSearch = () => {
       emit('search', query.value)
     }
 
+    const handleWatchlist = () => {
+      emit('toggleList', 'queue')
+    }
+
+    const handleWatched = () => {
+      emit('toggleList', 'watched')
+    }
+
     return {
       query,
       onSearch,
+      isLibraryPage,
+      handleWatchlist,
+      handleWatched,
     }
   },
 }
@@ -51,12 +71,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
+.search-container,
+.buttons-container {
+  margin-bottom: 10px;
 }
 
 .search-input {
@@ -68,11 +88,8 @@ export default {
   border-radius: 5px;
 }
 
-.search-input:focus {
-  box-shadow: inset 0 0 10px rgba(255, 99, 71, 0.5);
-}
-
-.search-button {
+.search-button,
+.header-button {
   padding: 10px 20px;
   background-color: #ff6347;
   color: white;
@@ -83,8 +100,38 @@ export default {
   border-radius: 5px;
 }
 
-.search-button:hover {
+.search-button:hover,
+.header-button:hover {
   background-color: #e5533d;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.header-button {
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 180px;
+  border: 2px solid white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.header-button:hover {
+  background-color: #ff6347;
+  color: white;
+  border: 2px solid #ff6347;
 }
 
 .nav ul {
@@ -99,35 +146,14 @@ export default {
   padding: 0;
 }
 
-.nav li {
-  font-size: 18px;
-}
-
 .nav a {
   color: white;
   text-decoration: none;
-  position: relative;
   text-transform: uppercase;
   transition: color 0.3s;
 }
 
 .nav a:hover {
   color: #ff6347;
-}
-
-.nav a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 100%;
-  height: 2px;
-  background-color: #ff6347;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.nav a:hover::after {
-  opacity: 1;
 }
 </style>

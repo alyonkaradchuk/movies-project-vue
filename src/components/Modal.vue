@@ -53,6 +53,22 @@ export default {
       }
     }
 
+    const addToWatched = () => {
+      let watchedMovies = JSON.parse(localStorage.getItem('watched')) || [];
+      if (!watchedMovies.some(m => m.id === props.movie.id)) {
+        watchedMovies.push(props.movie);
+        localStorage.setItem('watched', JSON.stringify(watchedMovies));
+      }
+    };
+
+    const addToQueue = () => {
+      let queueMovies = JSON.parse(localStorage.getItem('queue')) || [];
+      if (!queueMovies.some(m => m.id === props.movie.id)) {
+        queueMovies.push(props.movie);
+        localStorage.setItem('queue', JSON.stringify(queueMovies));
+      }
+    };
+
     onMounted(async () => {
       genres.value = await fetchGenres()
       document.addEventListener('keydown', closeOnEscape)
@@ -66,6 +82,8 @@ export default {
       posterUrl,
       genreList,
       getGenres,
+      addToQueue,
+      addToWatched,
     }
   },
   emits: ['close'],
