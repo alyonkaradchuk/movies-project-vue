@@ -28,7 +28,7 @@
 
 <script>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { getPoster, fetchGenres } from '@/ api/fetchMovies'
+import { getPoster, fetchGenres } from '../ api/fetchMovies'
 
 export default {
   props: {
@@ -44,7 +44,7 @@ export default {
     }
 
     const genreList = computed(() =>
-      props.movie?.genre_ids?.length ? getGenres(props.movie.genre_ids) : 'Unknown'
+      props.movie?.genre_ids?.length ? getGenres(props.movie.genre_ids) : 'Unknown',
     )
 
     const closeOnEscape = (event) => {
@@ -54,20 +54,20 @@ export default {
     }
 
     const addToWatched = () => {
-      let watchedMovies = JSON.parse(localStorage.getItem('watched')) || [];
-      if (!watchedMovies.some(m => m.id === props.movie.id)) {
-        watchedMovies.push(props.movie);
-        localStorage.setItem('watched', JSON.stringify(watchedMovies));
+      const watchedMovies = JSON.parse(localStorage.getItem('watched')) || []
+      if (!watchedMovies.some((m) => m.id === props.movie.id)) {
+        watchedMovies.push(props.movie)
+        localStorage.setItem('watched', JSON.stringify(watchedMovies))
       }
-    };
+    }
 
     const addToQueue = () => {
-      let queueMovies = JSON.parse(localStorage.getItem('queue')) || [];
-      if (!queueMovies.some(m => m.id === props.movie.id)) {
-        queueMovies.push(props.movie);
-        localStorage.setItem('queue', JSON.stringify(queueMovies));
+      const queueMovies = JSON.parse(localStorage.getItem('queue')) || []
+      if (!queueMovies.some((m) => m.id === props.movie.id)) {
+        queueMovies.push(props.movie)
+        localStorage.setItem('queue', JSON.stringify(queueMovies))
       }
-    };
+    }
 
     onMounted(async () => {
       genres.value = await fetchGenres()
@@ -168,14 +168,15 @@ export default {
   background-color: transparent;
   color: #ff6347;
   text-transform: uppercase;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .action-btn:hover {
   background-color: #ff6347;
   color: white;
 }
-
 
 .close-btn {
   position: absolute;

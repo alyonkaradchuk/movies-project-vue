@@ -2,33 +2,42 @@
   <div class="home">
     <HeaderComponent @search="onSearch" />
 
-    <div v-if="isLoading">
-      <p>Loading...</p>
-    </div>
-
-    <div v-if="paginatedMovies.length" class="movies-container">
-      <div class="movie" v-for="movie in paginatedMovies" :key="movie.id" @click="openModal(movie)">
-        <Cards
-          :id="movie.id"
-          :image="{ imageUrl: getPoster(movie.poster_path) }"
-          :title="movie.title || movie.name"
-          :genre="getGenres(movie.genre_ids)"
-          :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
-        />
+    <div class="content">
+      <div class="loader-container" v-if="isLoading">
+        <div class="loader"></div>
       </div>
 
-      <Pagination
-        v-if="data.length > moviesPerPage"
-        :totalMovies="data.length"
-        :moviesPerPage="moviesPerPage"
-        :currentPage="currentPage"
-        @page-change="handlePageChange"
-      />
-    </div>
+      <template v-else>
+        <div v-if="paginatedMovies.length" class="movies-container">
+          <div
+            class="movie"
+            v-for="movie in paginatedMovies"
+            :key="movie.id"
+            @click="openModal(movie)"
+          >
+            <Cards
+              :id="movie.id"
+              :image="{ imageUrl: getPoster(movie.poster_path) }"
+              :title="movie.title || movie.name"
+              :genre="getGenres(movie.genre_ids)"
+              :year="movie.release_date ? movie.release_date.split('-')[0] : 'Unknown'"
+            />
+          </div>
 
-    <div v-else>
-        <p>No movies found.</p>
-     </div>
+          <Pagination
+            v-if="data.length > moviesPerPage"
+            :totalMovies="data.length"
+            :moviesPerPage="moviesPerPage"
+            :currentPage="currentPage"
+            @page-change="handlePageChange"
+          />
+        </div>
+
+        <div v-else>
+          <p>No movies found.</p>
+        </div>
+      </template>
+    </div>
 
     <Modal :show="isModalOpen" :movie="selectedMovie" @close="closeModal" />
     <AppFooter />
@@ -58,9 +67,8 @@ export default {
     const currentPage = ref(1)
     const moviesPerPage = 8
     const isLoading = ref(true)
-
-    const isModalOpen = ref(false);
-    const selectedMovie = ref(null);
+    const isModalOpen = ref(false)
+    const selectedMovie = ref(null)
 
     watch(data, () => {
       currentPage.value = 1
@@ -82,6 +90,7 @@ export default {
 
     const onSearch = async (query) => {
       currentPage.value = 1
+      isLoading.value = true
       if (query.trim()) {
         const result = await searchMovies(query)
         data.value = result.results || []
@@ -89,25 +98,29 @@ export default {
         const result = await fetchTrendingMovies()
         data.value = result.results || []
       }
+      setTimeout(() => {
+        isLoading.value = false
+      }, 600)
     }
 
     const openModal = (movie) => {
-      selectedMovie.value = movie;
-      isModalOpen.value = true;
-    };
+      selectedMovie.value = movie
+      isModalOpen.value = true
+    }
 
     const closeModal = () => {
-      isModalOpen.value = false;
-      selectedMovie.value = null;
-    };
-
+      isModalOpen.value = false
+      selectedMovie.value = null
+    }
 
     onMounted(async () => {
-      const genresData = await fetchGenres();
-      genres.value = genresData;
+      const genresData = await fetchGenres()
+      genres.value = genresData
       const result = await fetchTrendingMovies()
       data.value = result.results || []
-      isLoading.value = false
+      setTimeout(() => {
+        isLoading.value = false
+      }, 600)
     })
 
     return {
@@ -131,33 +144,49 @@ export default {
 
 <style scoped>
 .home {
-  text-align: center;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.movie {
-  margin: 1rem;
+.content {
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid white;
+  border-radius: 50%;
+  border-top-color: #ff6347;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .movies-container {
   display: flex;
   flex-wrap: wrap;
-  flex: 1;
   justify-content: center;
   gap: 20px;
-}
-
-.movie img {
-  width: 100%;
-  height: auto;
+  padding: 20px;
 }
 </style>

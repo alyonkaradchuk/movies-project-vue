@@ -3,8 +3,11 @@
     <HeaderComponent @filter="handleFilter" />
 
     <div class="movies-container">
+      <div v-if="isLoading" class="loader-container">
+        <div class="loader"></div>
+      </div>
 
-      <div v-if="filteredMovies.length === 0">
+      <div v-else-if="filteredMovies.length === 0">
         <p v-if="filterType === 'queue'">Your queue is empty. Add some movies!</p>
         <p v-if="filterType === 'watched'">You have not watched any movies yet. Start adding them!</p>
       </div>
@@ -41,6 +44,7 @@ export default {
     const movies = ref([]);
     const filterType = ref('watched');
     const genres = ref({});
+    const isLoading = ref(true);
 
     onMounted(async () => {
       const fetchedGenres = await fetchGenres();
@@ -54,9 +58,17 @@ export default {
     };
 
     const loadMovies = () => {
+      movies.value = [];
+
       const storedMovies = JSON.parse(localStorage.getItem(filterType.value)) || [];
-      movies.value = storedMovies;
+
+      isLoading.value = true;
+      setTimeout(() => {
+        movies.value = storedMovies;
+        isLoading.value = false;
+      }, 600);
     };
+
 
     const filteredMovies = computed(() => movies.value);
 
@@ -70,6 +82,7 @@ export default {
       getPoster,
       getGenres,
       filterType,
+      isLoading,
     }
   }
 }
@@ -89,6 +102,31 @@ export default {
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  flex-grow: 1;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 70vh;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid white;
+  border-radius: 50%;
+  border-top-color: #ff6347;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

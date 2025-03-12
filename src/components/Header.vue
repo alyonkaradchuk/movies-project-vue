@@ -123,9 +123,6 @@ export default {
   background-color: transparent;
   color: white;
   text-transform: uppercase;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
 
 .header-button:hover {
@@ -134,26 +131,53 @@ export default {
   border: 2px solid #ff6347;
 }
 
+.header-button:focus {
+  background-color: #ff6347;
+  color: #ffffff;
+  border: 2px solid #ff6347;
+}
+
 .nav ul {
-  list-style-type: none;
-  display: flex;
-  gap: 30px;
-  justify-content: flex-end;
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  margin: 0;
-  padding: 0;
-}
+   list-style-type: none;
+   display: flex;
+   gap: 30px;
+   justify-content: flex-end;
+   position: absolute;
+   top: 30px;
+   right: 30px;
+   margin: 0;
+   padding: 0;
+ }
 
-.nav a {
-  color: white;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 0.3s;
-}
+ .nav li {
+   font-size: 18px;
+ }
 
-.nav a:hover {
-  color: #ff6347;
-}
+ .nav a {
+   color: white;
+   text-decoration: none;
+   position: relative;
+   text-transform: uppercase;
+   transition: color 0.3s;
+ }
+
+ .nav a:hover {
+   color: #ff6347;
+ }
+
+ .nav a::after {
+   content: '';
+   position: absolute;
+   left: 0;
+   bottom: -5px;
+   width: 100%;
+   height: 2px;
+   background-color: #ff6347;
+   opacity: 0;
+   transition: opacity 0.3s;
+ }
+
+ .nav a:hover::after {
+   opacity: 1;
+ }
 </style>
