@@ -1,38 +1,49 @@
 <template>
   <header class="header">
     <div v-if="isLibraryPage" class="buttons-container">
-      <button class="header-button" @click="$emit('filter', 'watched')">Watched</button>
-      <button class="header-button" @click="$emit('filter', 'queue')">Queue</button>
+      <button class="header-button" @click="$emit('filter', 'watched')">{{ $t('watched') }}</button>
+      <button class="header-button" @click="$emit('filter', 'queue')">{{ $t('queue') }}</button>
     </div>
 
     <div v-else class="search-container">
       <input
         type="text"
         v-model="query"
-        placeholder="Movie Search"
+        :placeholder="$t('searchPlaceholder')"
         @keyup.enter="onSearch"
         class="search-input"
       />
-      <button @click="onSearch" class="search-button">Search</button>
+      <button @click="onSearch" class="search-button">{{ $t('search') }}</button>
     </div>
 
     <nav class="nav">
       <ul>
-        <router-link to="/">Home</router-link>
-        <router-link to="/library">My Library</router-link>
+        <router-link to="/">{{ $t('home') }}</router-link>
+        <router-link to="/library">{{ $t('myLibrary') }}</router-link>
       </ul>
     </nav>
+
+    <div class="language-switcher">
+      <select v-model="currentLocale" @change="changeLanguage" class="language-select">
+        <option value="en">EN</option>
+        <option value="uk">UK</option>
+      </select>
+    </div>
   </header>
 </template>
 
 <script>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
 
 export default {
   setup(props, { emit }) {
     const route = useRoute()
+    const { locale } = useI18n()
     const query = ref('')
+    const currentLocale = ref(localStorage.getItem('lang') || 'en')
 
     const isLibraryPage = computed(() => route.name === 'Library')
 
@@ -48,12 +59,19 @@ export default {
       emit('toggleList', 'watched')
     }
 
+    const changeLanguage = () => {
+      locale.value = currentLocale.value
+      localStorage.setItem('lang', currentLocale.value)
+    }
+
     return {
       query,
       onSearch,
       isLibraryPage,
       handleWatchlist,
       handleWatched,
+      changeLanguage,
+      currentLocale,
     }
   },
 }
@@ -180,4 +198,30 @@ export default {
  .nav a:hover::after {
    opacity: 1;
  }
+
+ .language-switcher {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.language-select {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.language-select:focus {
+  outline: none;
+}
+
+.language-select option {
+  background: black;
+  color: white;
+}
 </style>

@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="footer-content">
       <p>
-        &copy; {{ currentYear }} | All rights reserved | Developed with
+        &copy; {{ currentYear }} | {{ $t('allRightsReserved') }} | {{ $t('developedWith') }}
         <img src="/src/images/Red-Classic-Love-Heart-clip-art-material-decoration_189516_wh1200.png" alt="Logo" class="footer-logo" />
       </p>
     </div>

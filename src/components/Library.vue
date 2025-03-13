@@ -8,8 +8,8 @@
       </div>
 
       <div v-else-if="filteredMovies.length === 0">
-        <p v-if="filterType === 'queue'">Your queue is empty. Add some movies!</p>
-        <p v-if="filterType === 'watched'">You have not watched any movies yet. Start adding them!</p>
+        <p v-if="filterType === 'watched'">{{ $t('watchedEmptyMessage') }}</p>
+        <p v-if="filterType === 'queue'">{{ $t('queueEmptyMessage') }}</p>
       </div>
 
       <Cards

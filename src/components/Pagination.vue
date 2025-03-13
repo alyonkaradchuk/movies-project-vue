@@ -1,7 +1,7 @@
 <template>
   <div v-if="totalPages > 1" class="pagination">
     <button @click="prevPage" :disabled="currentPage === 1">←</button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <span>{{ $t('page') }} {{ currentPage }} {{ $t('of') }} {{ totalPages }}</span>
     <button @click="nextPage" :disabled="currentPage === totalPages">→</button>
   </div>
 </template>

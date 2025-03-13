@@ -6,25 +6,26 @@
       <div class="modal-content">
         <h2>{{ movie?.title || movie?.name }}</h2>
         <p>
-          <strong>Vote/Votes:</strong>
+          <strong>{{ $t('voteVotes') }}:</strong>
           <span class="vote-score">{{ movie?.vote_average.toFixed(1) }}</span>
           / {{ movie?.vote_count }}
         </p>
-        <p><strong>Popularity:</strong> {{ movie?.popularity.toFixed(1) }}</p>
-        <p><strong>Genre:</strong> {{ genreList }}</p>
+        <p><strong>{{ $t('popularity') }}:</strong> {{ movie?.popularity.toFixed(1) }}</p>
+        <p><strong>{{ $t('movieGenre') }}:</strong> {{ genreList }}</p>
         <p>
-          <strong>Year:</strong>
+          <strong>{{ $t('movieYear') }}:</strong>
           {{ movie?.release_date ? movie?.release_date.split('-')[0] : 'Unknown' }}
         </p>
-        <p><strong>About:</strong> {{ movie?.overview }}</p>
+        <p><strong>{{ $t('about') }}:</strong> {{ movie?.overview }}</p>
         <div class="button-group">
-          <button class="action-btn" @click="addToWatched">Add to Watched</button>
-          <button class="action-btn" @click="addToQueue">Add to Queue</button>
+          <button class="action-btn" @click="addToWatched">{{ $t('addToWatched') }}</button>
+          <button class="action-btn" @click="addToQueue">{{ $t('addToQueue') }}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import { computed, onMounted, onUnmounted, ref } from 'vue'

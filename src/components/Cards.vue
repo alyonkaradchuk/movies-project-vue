@@ -7,20 +7,21 @@
     />
     <div class="card-movie__container">
       <span class="card-movie__label">
-        Name:
+        {{ $t('movieName') }}:
         <p class="card-movie__paragraph">{{ title }}</p>
       </span>
       <span class="card-movie__label">
-        Genre:
+        {{ $t('movieGenre') }}:
         <p class="card-movie__paragraph">{{ genre }}</p>
       </span>
       <span class="card-movie__label">
-        Year:
+        {{ $t('movieYear') }}:
         <p class="card-movie__paragraph">{{ year }}</p>
       </span>
     </div>
   </div>
 </template>
+
 
 <script>
 

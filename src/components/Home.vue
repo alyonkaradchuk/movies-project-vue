@@ -34,7 +34,7 @@
         </div>
 
         <div v-else>
-          <p>No movies found.</p>
+          <p>{{ $t('noMoviesFound') }}</p>
         </div>
       </template>
     </div>
