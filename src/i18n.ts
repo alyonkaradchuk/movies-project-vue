@@ -44,16 +44,16 @@ const messages = {
     addToWatched: 'Додати до переглянутого',
     addToQueue: 'Переглянути пізніше',
     noMoviesFound: 'Не знайдено фільмів. Введіть правильну назву фільму.',
-    watchedEmptyMessage: 'Ви ще не подивились жодного фільму. Почніть додавати!',
-    queueEmptyMessage: 'Ваш список до перегляду пустий. Додайте фільми!'
-  }
+    watchedEmptyMessage: 'Ви ще не подивились жодного фільму. Додайте переглянуті фільми!',
+    queueEmptyMessage: 'Ваш список до перегляду пустий. Додайте фільми!',
+  },
 }
 
 const i18n = createI18n({
   legacy: false,
   locale: localStorage.getItem('lang') || 'en',
   fallbackLocale: 'en',
-  messages
+  messages,
 })
 
 export default i18n

@@ -1,10 +1,6 @@
 <template>
   <div :key="id" class="card-movie">
-    <img
-      class="card-movie__image"
-      :src="image.imageUrl"
-      alt="movie img"
-    />
+    <img class="card-movie__image" :src="image.imageUrl" alt="movie img" />
     <div class="card-movie__container">
       <span class="card-movie__label">
         {{ $t('movieName') }}:
@@ -22,9 +18,7 @@
   </div>
 </template>
 
-
 <script>
-
 export default {
   props: {
     id: Number,
@@ -33,10 +27,12 @@ export default {
     genre: String,
     year: String,
   },
-};
+}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/colors.scss';
+
 .card-movie {
   display: flex;
   flex-direction: column;
@@ -44,41 +40,43 @@ export default {
   min-height: 600px;
   color: #525252;
   transition: transform 0.3s ease-in-out;
-  background-color: #fff;
+  background-color: $white-color;
   border-radius: 15px;
-  box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
+  box-shadow:
+    0 2px 4px 0 rgba(136, 144, 195, 0.2),
+    0 5px 15px 0 rgba(37, 44, 97, 0.15);
   margin-bottom: 20px;
-}
 
-.card-movie:hover {
-  background-color: #309df0;
-  color: #fff;
-  transform: scale(1.05);
-}
+  &:hover {
+    background-color: $primary-color;
+    color: $white-color;
+    transform: scale(1.05);
+  }
 
-.card-movie__image {
-  width: 100%;
-  height: 450px;
-  object-fit: cover;
-  border-radius: 15px;
-}
+  &__image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 15px;
+  }
 
-.card-movie__container {
-  padding: 0 12px;
-  margin-top: 20px;
-}
+  &__container {
+    padding: 0 12px;
+    margin-top: 20px;
+  }
 
-.card-movie__label {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+  &__label {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
 
-.card-movie__paragraph {
-  margin: 0;
-  font-weight: 400;
-  text-align: right;
+  &__paragraph {
+    margin: 0;
+    font-weight: 400;
+    text-align: right;
+  }
 }
 </style>

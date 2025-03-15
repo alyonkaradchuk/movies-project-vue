@@ -46,27 +46,29 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/colors.scss';
+
 .pagination {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
-}
+  margin-bottom: 20px;
 
-button {
-  margin: 0 10px;
-  padding: 5px 10px;
-  border: none;
-  background-color: #ff6347;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-}
+  button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: $primary-color;
+    color: $white-color;
+    cursor: pointer;
+    border-radius: 5px;
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
 }
 </style>
