@@ -30,3 +30,4 @@ coverage
 
 # Secret
 .env
+.package-lock.json

@@ -43,7 +43,10 @@ export const fetchGenres = async () => {
         Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
       },
     }
-    const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+    const response = await fetch(
+      'https://api.themoviedb.org/3/genre/movie/list?language=en',
+      options,
+    )
     const result = await response.json()
 
     return result.genres.reduce((acc, genre) => {

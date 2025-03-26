@@ -13,7 +13,8 @@
           / {{ movie?.vote_count }}
         </p>
         <p class="paragraph">
-          <strong class="text-bold">{{ $t('popularity') }}:</strong> {{ movie?.popularity.toFixed(1) }}
+          <strong class="text-bold">{{ $t('popularity') }}:</strong>
+          {{ movie?.popularity.toFixed(1) }}
         </p>
         <p class="paragraph">
           <strong class="text-bold">{{ $t('movieGenre') }}:</strong> {{ genreList }}
@@ -111,7 +112,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 @import '../assets/colors.scss';
 
 .modal-overlay {
@@ -185,7 +186,9 @@ export default {
       background-color: transparent;
       color: $primary-color;
       text-transform: uppercase;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 
       &:hover {
         background-color: $primary-color;

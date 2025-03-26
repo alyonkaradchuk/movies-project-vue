@@ -22,11 +22,11 @@
         <router-link class="nav__link" to="/library">{{ $t('myLibrary') }}</router-link>
       </ul>
       <div class="language-switcher">
-      <select v-model="currentLocale" @change="changeLanguage" class="language-select">
-        <option value="en">EN</option>
-        <option value="uk">UK</option>
-      </select>
-    </div>
+        <select v-model="currentLocale" @change="changeLanguage" class="language-select">
+          <option value="en">EN</option>
+          <option value="uk">UK</option>
+        </select>
+      </div>
     </nav>
   </header>
 </template>
@@ -79,7 +79,7 @@ export default {
 @import '../assets/colors.scss';
 
 .header {
-  background-image: url("../images/theater-8921521_1920.jpg");
+  background-image: url('../images/theater-8921521_1920.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -174,7 +174,7 @@ export default {
   position: relative;
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     bottom: -5px;
@@ -207,7 +207,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-
   .search-input {
     width: 150px;
     margin-top: 15px;
