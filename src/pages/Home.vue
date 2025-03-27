@@ -45,10 +45,10 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import HeaderComponent from '../components/Header.vue'
 import Cards from '../components/Cards.vue'
-import { fetchTrendingMovies, searchMovies, getPoster, fetchGenres } from '../ api/fetchMovies'
+import { fetchTrendingMovies, searchMovies, getPoster, fetchGenres } from '../api/fetchMovies'
 import Pagination from '../components/Pagination.vue'
 import Modal from '../components/Modal.vue'
 import AppFooter from '../components/Footer.vue'
@@ -69,6 +69,7 @@ export default {
     const isLoading = ref(true)
     const isModalOpen = ref(false)
     const selectedMovie = ref(null)
+    let timeoutId = null
 
     watch(data, () => {
       currentPage.value = 1
@@ -91,6 +92,7 @@ export default {
     const onSearch = async (query) => {
       currentPage.value = 1
       isLoading.value = true
+      clearTimeout(timeoutId)
       if (query.trim()) {
         const result = await searchMovies(query)
         data.value = result.results || []
@@ -98,7 +100,7 @@ export default {
         const result = await fetchTrendingMovies()
         data.value = result.results || []
       }
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         isLoading.value = false
       }, 600)
     }
@@ -118,9 +120,14 @@ export default {
       genres.value = genresData
       const result = await fetchTrendingMovies()
       data.value = result.results || []
-      setTimeout(() => {
+
+      timeoutId = setTimeout(() => {
         isLoading.value = false
       }, 600)
+    })
+
+    onUnmounted(() => {
+      clearTimeout(timeoutId)
     })
 
     return {
@@ -143,8 +150,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/colors.scss';
-
 .home {
   display: flex;
   flex-direction: column;

@@ -31,7 +31,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/colors.scss';
 
 .card-movie {
   display: flex;

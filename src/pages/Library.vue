@@ -39,11 +39,11 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import HeaderComponent from '../components/Header.vue'
-import Cards from './Cards.vue'
-import AppFooter from './Footer.vue'
+import Cards from '../components/Cards.vue'
+import AppFooter from '../components/Footer.vue'
 import Modal from '../components/Modal.vue'
 import Pagination from '../components/Pagination.vue'
-import { getPoster, fetchGenres } from '../ api/fetchMovies'
+import { getPoster, fetchGenres } from '../api/fetchMovies'
 
 export default {
   components: {
@@ -54,57 +54,57 @@ export default {
     Pagination,
   },
   setup() {
-    const movies = ref([]);
-    const filterType = ref('watched');
-    const genres = ref({});
-    const isLoading = ref(true);
-    const showModal = ref(false);
-    const selectedMovie = ref(null);
-    const currentPage = ref(1);
-    const moviesPerPage = 8;
+    const movies = ref([])
+    const filterType = ref('watched')
+    const genres = ref({})
+    const isLoading = ref(true)
+    const showModal = ref(false)
+    const selectedMovie = ref(null)
+    const currentPage = ref(1)
+    const moviesPerPage = 8
 
     onMounted(async () => {
-      const fetchedGenres = await fetchGenres();
-      genres.value = fetchedGenres;
-      loadMovies();
-    });
+      const fetchedGenres = await fetchGenres()
+      genres.value = fetchedGenres
+      loadMovies()
+    })
 
     const handleFilter = (type) => {
-      filterType.value = type;
-      loadMovies();
-    };
+      filterType.value = type
+      loadMovies()
+    }
 
     const loadMovies = () => {
-      movies.value = [];
-      const storedMovies = JSON.parse(localStorage.getItem(filterType.value)) || [];
-      isLoading.value = true;
+      movies.value = []
+      const storedMovies = JSON.parse(localStorage.getItem(filterType.value)) || []
+      isLoading.value = true
       setTimeout(() => {
-        movies.value = storedMovies;
-        isLoading.value = false;
-      }, 600);
-    };
+        movies.value = storedMovies
+        isLoading.value = false
+      }, 600)
+    }
 
-    const totalMovies = computed(() => movies.value.length);
+    const totalMovies = computed(() => movies.value.length)
 
     const paginatedMovies = computed(() => {
-      const start = (currentPage.value - 1) * moviesPerPage;
-      const end = start + moviesPerPage;
-      return movies.value.slice(start, end);
-    });
+      const start = (currentPage.value - 1) * moviesPerPage
+      const end = start + moviesPerPage
+      return movies.value.slice(start, end)
+    })
 
     const changePage = (page) => {
-      currentPage.value = page;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+      currentPage.value = page
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
 
     const openModal = (movie) => {
-      selectedMovie.value = movie;
-      showModal.value = true;
-    };
+      selectedMovie.value = movie
+      showModal.value = true
+    }
 
     const getGenres = (genreIds) => {
-      return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ');
-    };
+      return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ')
+    }
 
     return {
       paginatedMovies,
@@ -120,14 +120,12 @@ export default {
       showModal,
       selectedMovie,
       openModal,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/colors.scss';
-
 .library {
   display: flex;
   flex-direction: column;

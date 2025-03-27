@@ -76,7 +76,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/colors.scss';
 
 .header {
   background-image: url('../images/theater-8921521_1920.jpg');

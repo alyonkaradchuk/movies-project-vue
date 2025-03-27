@@ -37,7 +37,7 @@
 
 <script>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { getPoster, fetchGenres } from '../ api/fetchMovies'
+import { getPoster, fetchGenres } from '../api/fetchMovies'
 
 export default {
   props: {
@@ -113,8 +113,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/colors.scss';
-
 .modal-overlay {
   position: fixed;
   top: 0;
