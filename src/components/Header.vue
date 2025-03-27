@@ -31,54 +31,34 @@
   </header>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-export default {
-  setup(props, { emit }) {
-    const route = useRoute()
-    const { locale } = useI18n()
-    const query = ref('')
-    const currentLocale = ref(localStorage.getItem('lang') || 'en')
+const emit = defineEmits(['search', 'filter'])
 
-    const isLibraryPage = computed(() => route.name === 'Library')
+const route = useRoute()
+const { locale } = useI18n()
 
-    const onSearch = () => {
-      emit('search', query.value)
-    }
+const query = ref('')
+const currentLocale = ref(localStorage.getItem('lang') || 'en')
 
-    const handleWatchlist = () => {
-      emit('toggleList', 'queue')
-    }
+const isLibraryPage = computed(() => route.name === 'Library')
 
-    const handleWatched = () => {
-      emit('toggleList', 'watched')
-    }
+const onSearch = () => {
+  emit('search', query.value)
+}
 
-    const changeLanguage = () => {
-      locale.value = currentLocale.value
-      localStorage.setItem('lang', currentLocale.value)
-    }
-
-    return {
-      query,
-      onSearch,
-      isLibraryPage,
-      handleWatchlist,
-      handleWatched,
-      changeLanguage,
-      currentLocale,
-    }
-  },
+const changeLanguage = () => {
+  locale.value = currentLocale.value
+  localStorage.setItem('lang', currentLocale.value)
 }
 </script>
 
 <style lang="scss" scoped>
-
 .header {
-  background-image: url('../images/theater-8921521_1920.jpg');
+  background-image: url('../images/cinema.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

@@ -6,48 +6,48 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue'
 
-export default {
-  props: {
-    totalMovies: Number,
-    moviesPerPage: Number,
-    currentPage: Number,
+const props = defineProps({
+  totalMovies: {
+    type: Number,
+    required: true
   },
-  emits: ['page-change'],
-  setup(props, { emit }) {
-    const totalPages = computed(() => Math.ceil(props.totalMovies / props.moviesPerPage))
-
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-
-    const prevPage = () => {
-      if (props.currentPage > 1) {
-        emit('page-change', props.currentPage - 1)
-        scrollToTop()
-      }
-    }
-
-    const nextPage = () => {
-      if (props.currentPage < totalPages.value) {
-        emit('page-change', props.currentPage + 1)
-        scrollToTop()
-      }
-    }
-
-    return {
-      totalPages,
-      prevPage,
-      nextPage,
-    }
+  moviesPerPage: {
+    type: Number,
+    required: true
   },
+  currentPage: {
+    type: Number,
+    required: true
+  }
+})
+
+const emit = defineEmits(['page-change'])
+
+const totalPages = computed(() => Math.ceil(props.totalMovies / props.moviesPerPage))
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function prevPage() {
+  if (props.currentPage > 1) {
+    emit('page-change', props.currentPage - 1)
+    scrollToTop()
+  }
+}
+
+function nextPage() {
+  if (props.currentPage < totalPages.value) {
+    emit('page-change', props.currentPage + 1)
+    scrollToTop()
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .pagination {
   width: 100%;
   display: flex;

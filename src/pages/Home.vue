@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import HeaderComponent from '../components/Header.vue'
 import Cards from '../components/Cards.vue'
@@ -53,100 +53,76 @@ import Pagination from '../components/Pagination.vue'
 import Modal from '../components/Modal.vue'
 import AppFooter from '../components/Footer.vue'
 
-export default {
-  components: {
-    HeaderComponent,
-    Cards,
-    Pagination,
-    Modal,
-    AppFooter,
-  },
-  setup() {
-    const data = ref([])
-    const genres = ref({})
-    const currentPage = ref(1)
-    const moviesPerPage = 8
-    const isLoading = ref(true)
-    const isModalOpen = ref(false)
-    const selectedMovie = ref(null)
-    let timeoutId = null
+const data = ref([])
+const genres = ref({})
+const currentPage = ref(1)
+const moviesPerPage = 8
+const isLoading = ref(true)
+const isModalOpen = ref(false)
+const selectedMovie = ref(null)
+let loadingTimeout = null
 
-    watch(data, () => {
-      currentPage.value = 1
-    })
+watch(data, () => {
+  currentPage.value = 1
+})
 
-    const paginatedMovies = computed(() => {
-      const start = (currentPage.value - 1) * moviesPerPage
-      const end = start + moviesPerPage
-      return data.value.slice(start, end)
-    })
+const paginatedMovies = computed(() => {
+  const start = (currentPage.value - 1) * moviesPerPage
+  const end = start + moviesPerPage
+  return data.value.slice(start, end)
+})
 
-    const handlePageChange = (page) => {
-      currentPage.value = page
-    }
-
-    const getGenres = (genreIds) => {
-      return genreIds.map((id) => genres.value[id] || 'Other').join(', ')
-    }
-
-    const onSearch = async (query) => {
-      currentPage.value = 1
-      isLoading.value = true
-      clearTimeout(timeoutId)
-      if (query.trim()) {
-        const result = await searchMovies(query)
-        data.value = result.results || []
-      } else {
-        const result = await fetchTrendingMovies()
-        data.value = result.results || []
-      }
-      timeoutId = setTimeout(() => {
-        isLoading.value = false
-      }, 600)
-    }
-
-    const openModal = (movie) => {
-      selectedMovie.value = movie
-      isModalOpen.value = true
-    }
-
-    const closeModal = () => {
-      isModalOpen.value = false
-      selectedMovie.value = null
-    }
-
-    onMounted(async () => {
-      const genresData = await fetchGenres()
-      genres.value = genresData
-      const result = await fetchTrendingMovies()
-      data.value = result.results || []
-
-      timeoutId = setTimeout(() => {
-        isLoading.value = false
-      }, 600)
-    })
-
-    onUnmounted(() => {
-      clearTimeout(timeoutId)
-    })
-
-    return {
-      data,
-      onSearch,
-      getPoster,
-      getGenres,
-      paginatedMovies,
-      handlePageChange,
-      moviesPerPage,
-      currentPage,
-      isLoading,
-      isModalOpen,
-      selectedMovie,
-      openModal,
-      closeModal,
-    }
-  },
+const handlePageChange = (page) => {
+  currentPage.value = page
 }
+
+const getGenres = (genreIds) => {
+  return genreIds.map((id) => genres.value[id] || 'Other').join(', ')
+}
+
+const onSearch = async (query) => {
+  currentPage.value = 1
+  isLoading.value = true
+  clearTimeout(loadingTimeout)
+
+  if (query.trim()) {
+    const result = await searchMovies(query)
+    data.value = result.results || []
+  } else {
+    const result = await fetchTrendingMovies()
+    data.value = result.results || []
+  }
+
+  loadingTimeout = setTimeout(() => {
+    isLoading.value = false
+  }, 600)
+}
+
+const openModal = (movie) => {
+  selectedMovie.value = movie
+  isModalOpen.value = true
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
+  selectedMovie.value = null
+}
+
+onMounted(async () => {
+  const genresData = await fetchGenres()
+  genres.value = genresData
+
+  const result = await fetchTrendingMovies()
+  data.value = result.results || []
+
+  loadingTimeout = setTimeout(() => {
+    isLoading.value = false
+  }, 600)
+})
+
+onUnmounted(() => {
+  clearTimeout(loadingTimeout)
+})
 </script>
 
 <style lang="scss" scoped>

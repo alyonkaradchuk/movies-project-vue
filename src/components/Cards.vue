@@ -18,20 +18,32 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    id: Number,
-    image: Object,
-    title: String,
-    genre: String,
-    year: String,
+<script setup>
+defineProps({
+  id: {
+    type: Number,
+    required: true
   },
-}
+  image: {
+    type: Object,
+    required: true
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  genre: {
+    type: String,
+    default: ''
+  },
+  year: {
+    type: String,
+    default: ''
+  }
+})
 </script>
 
 <style lang="scss" scoped>
-
 .card-movie {
   display: flex;
   flex-direction: column;

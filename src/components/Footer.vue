@@ -4,7 +4,7 @@
       <p class="footer-content__text">
         &copy; {{ currentYear }} | {{ $t('allRightsReserved') }} | {{ $t('developedWith') }}
         <img
-          src="/src/images/Red-Classic-Love-Heart-clip-art-material-decoration_189516_wh1200.png"
+          src="/src/images/heart.png"
           alt="Logo"
           class="footer-logo"
         />
@@ -13,21 +13,13 @@
   </footer>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 
-export default {
-  name: 'AppFooter',
-  setup() {
-    const currentYear = ref(new Date().getFullYear())
-    return {
-      currentYear,
-    }
-  },
-}
+const currentYear = ref(new Date().getFullYear())
 </script>
 
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 .footer {
   background-color: #f7f7f7;
   color: #545454;

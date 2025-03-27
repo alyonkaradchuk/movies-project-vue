@@ -36,8 +36,8 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted } from 'vue'
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import HeaderComponent from '../components/Header.vue'
 import Cards from '../components/Cards.vue'
 import AppFooter from '../components/Footer.vue'
@@ -45,83 +45,62 @@ import Modal from '../components/Modal.vue'
 import Pagination from '../components/Pagination.vue'
 import { getPoster, fetchGenres } from '../api/fetchMovies'
 
-export default {
-  components: {
-    HeaderComponent,
-    Cards,
-    AppFooter,
-    Modal,
-    Pagination,
-  },
-  setup() {
-    const movies = ref([])
-    const filterType = ref('watched')
-    const genres = ref({})
-    const isLoading = ref(true)
-    const showModal = ref(false)
-    const selectedMovie = ref(null)
-    const currentPage = ref(1)
-    const moviesPerPage = 8
+const movies = ref([])
+const filterType = ref('watched')
+const genres = ref({})
+const isLoading = ref(true)
+const showModal = ref(false)
+const selectedMovie = ref(null)
+const currentPage = ref(1)
+const moviesPerPage = 8
+const loadingTimeout = ref(null)
 
-    onMounted(async () => {
-      const fetchedGenres = await fetchGenres()
-      genres.value = fetchedGenres
-      loadMovies()
-    })
+onMounted(async () => {
+  const fetchedGenres = await fetchGenres()
+  genres.value = fetchedGenres
+  loadMovies()
+})
 
-    const handleFilter = (type) => {
-      filterType.value = type
-      loadMovies()
-    }
+onUnmounted(() => {
+  clearTimeout(loadingTimeout.value)
+})
 
-    const loadMovies = () => {
-      movies.value = []
-      const storedMovies = JSON.parse(localStorage.getItem(filterType.value)) || []
-      isLoading.value = true
-      setTimeout(() => {
-        movies.value = storedMovies
-        isLoading.value = false
-      }, 600)
-    }
+const handleFilter = (type) => {
+  filterType.value = type
+  loadMovies()
+}
 
-    const totalMovies = computed(() => movies.value.length)
+const loadMovies = () => {
+  movies.value = []
+  const storedMovies = JSON.parse(localStorage.getItem(filterType.value)) || []
+  isLoading.value = true
 
-    const paginatedMovies = computed(() => {
-      const start = (currentPage.value - 1) * moviesPerPage
-      const end = start + moviesPerPage
-      return movies.value.slice(start, end)
-    })
+  loadingTimeout.value = setTimeout(() => {
+    movies.value = storedMovies
+    isLoading.value = false
+  }, 600)
+}
 
-    const changePage = (page) => {
-      currentPage.value = page
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
+const totalMovies = computed(() => movies.value.length)
 
-    const openModal = (movie) => {
-      selectedMovie.value = movie
-      showModal.value = true
-    }
+const paginatedMovies = computed(() => {
+  const start = (currentPage.value - 1) * moviesPerPage
+  const end = start + moviesPerPage
+  return movies.value.slice(start, end)
+})
 
-    const getGenres = (genreIds) => {
-      return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ')
-    }
+const changePage = (page) => {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
-    return {
-      paginatedMovies,
-      totalMovies,
-      moviesPerPage,
-      currentPage,
-      changePage,
-      handleFilter,
-      getPoster,
-      getGenres,
-      filterType,
-      isLoading,
-      showModal,
-      selectedMovie,
-      openModal,
-    }
-  },
+const openModal = (movie) => {
+  selectedMovie.value = movie
+  showModal.value = true
+}
+
+const getGenres = (genreIds) => {
+  return genreIds.map((id) => genres.value[id] || 'Unknown').join(', ')
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="show" class="modal-overlay" @click.self="$emit('close')">
+  <div v-if="show" class="modal-overlay" @click.self="emit('close')">
     <div class="modal">
-      <button class="close-btn" @click="$emit('close')">✖</button>
+      <button class="close-btn" @click="emit('close')">✖</button>
       <div class="modal-picture">
         <img :src="posterUrl" alt="Movie Poster" class="poster" />
       </div>
@@ -35,81 +35,78 @@
   </div>
 </template>
 
-<script>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { getPoster, fetchGenres } from '../api/fetchMovies'
 
-export default {
-  props: {
-    show: Boolean,
-    movie: Object,
-  },
-  setup(props, { emit }) {
-    const genres = ref({})
-    const posterUrl = computed(() => (props.movie ? getPoster(props.movie.poster_path) : ''))
+const props = defineProps({
+  show: Boolean,
+  movie: Object
+})
 
-    const getGenres = (genreIds) => {
-      return genreIds.map((id) => genres.value[id] || 'Other').join(', ')
-    }
+const emit = defineEmits(['close'])
 
-    const genreList = computed(() =>
-      props.movie?.genre_ids?.length ? getGenres(props.movie.genre_ids) : 'Unknown',
-    )
+const genres = ref({})
+const watchedMovies = ref(JSON.parse(localStorage.getItem('watched')) || [])
+const queueMovies = ref(JSON.parse(localStorage.getItem('queue')) || [])
 
-    const closeOnEscape = (event) => {
-      if (event.key === 'Escape') {
-        emit('close')
-      }
-    }
+const posterUrl = computed(() => (props.movie ? getPoster(props.movie.poster_path) : ''))
 
-    const watchedMovies = ref(JSON.parse(localStorage.getItem('watched')) || [])
-    const queueMovies = ref(JSON.parse(localStorage.getItem('queue')) || [])
+const genreList = computed(() => {
+  if (!props.movie?.genre_ids?.length) return 'Unknown'
+  return props.movie.genre_ids
+    .map((id) => genres.value[id] || 'Other')
+    .join(', ')
+})
 
-    const isWatched = computed(() => watchedMovies.value.some((m) => m.id === props.movie?.id))
-    const isQueued = computed(() => queueMovies.value.some((m) => m.id === props.movie?.id))
+const isWatched = computed(() =>
+  watchedMovies.value.some((m) => m.id === props.movie?.id)
+)
 
-    const watchedText = computed(() => (isWatched.value ? 'Remove from watched' : 'Add to watched'))
-    const queueText = computed(() => (isQueued.value ? 'Remove from queue' : 'Add to queue'))
+const isQueued = computed(() =>
+  queueMovies.value.some((m) => m.id === props.movie?.id)
+)
 
-    const toggleWatched = () => {
-      if (isWatched.value) {
-        watchedMovies.value = watchedMovies.value.filter((m) => m.id !== props.movie.id)
-      } else {
-        watchedMovies.value.push(props.movie)
-      }
-      localStorage.setItem('watched', JSON.stringify(watchedMovies.value))
-    }
+const watchedText = computed(() =>
+  isWatched.value ? 'Remove from watched' : 'Add to watched'
+)
 
-    const toggleQueue = () => {
-      if (isQueued.value) {
-        queueMovies.value = queueMovies.value.filter((m) => m.id !== props.movie.id)
-      } else {
-        queueMovies.value.push(props.movie)
-      }
-      localStorage.setItem('queue', JSON.stringify(queueMovies.value))
-    }
+const queueText = computed(() =>
+  isQueued.value ? 'Remove from queue' : 'Add to queue'
+)
 
-    onMounted(async () => {
-      genres.value = await fetchGenres()
-      document.addEventListener('keydown', closeOnEscape)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('keydown', closeOnEscape)
-    })
-
-    return {
-      posterUrl,
-      genreList,
-      getGenres,
-      toggleQueue,
-      toggleWatched,
-      watchedText,
-      queueText,
-    }
-  },
-  emits: ['close'],
+function toggleWatched() {
+  if (isWatched.value) {
+    watchedMovies.value = watchedMovies.value.filter((m) => m.id !== props.movie.id)
+  } else {
+    watchedMovies.value.push(props.movie)
+  }
+  localStorage.setItem('watched', JSON.stringify(watchedMovies.value))
 }
+
+function toggleQueue() {
+  if (isQueued.value) {
+    queueMovies.value = queueMovies.value.filter((m) => m.id !== props.movie.id)
+  } else {
+    queueMovies.value.push(props.movie)
+  }
+  localStorage.setItem('queue', JSON.stringify(queueMovies.value))
+}
+
+function closeOnEscape(event) {
+  if (event.key === 'Escape') {
+    emit('close')
+  }
+}
+
+onMounted(async () => {
+  genres.value = await fetchGenres()
+  document.addEventListener('keydown', closeOnEscape)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', closeOnEscape)
+})
 </script>
 
 <style lang="scss" scoped>
